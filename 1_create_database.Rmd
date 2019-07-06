@@ -1,0 +1,1107 @@
+---
+title: "Create twitter database"
+author: '32341885'
+date: '15 November 2018'
+output: pdf_document
+urlcolor: blue
+---
+
+```{r, message=FALSE}
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(textstem)
+```
+
+1. Download data from:  
+https://www.dropbox.com/sh/f7h1toj1bx20hu4/AAAPE6pIA99BMIlLENqxVOlTa?dl=0
+
+2. Unpack all archives to one folder  
+
+3. Add identifier "Webcargo" to the relevant files names
+
+4. Add identifier "Magnum" to the relevant files names
+
+5. Change the name of Sony file from XXX to "2015072011_{}+SONY" to "SONY_2015072011"
+
+6. Manually delete all non-twitter observations to reduce file sizes
+
+Important: file "B&J+Magnum May 1st 2016 Sep 30 2016" - for some observations column are shifted
+by one column to the right
+
+## MAGNUM
+
+7. Save all Magnum twiiter files as csv in the folder Magnum
+
+8. Download each file merge them into one database
+```{r setup}
+knitr::opts_knit$set(root.dir = "C:/Users/Oleksa/Documents/Term_1/DS_Fundamentals/Project/Data/Magnum")
+```
+
+```{r, include=FALSE}
+df_files <- data.frame(name=list.files())
+
+df_files <- df_files %>%
+                mutate(name = as.character(name))
+
+for (i in seq(1, nrow(df_files))) {
+  assign(paste("magnum", i, sep="_"), read.csv2(df_files$name[i]))
+  
+}
+
+magnum <- rbind(magnum_1, magnum_2, magnum_3, magnum_4, magnum_5, magnum_6, magnum_7, 
+                magnum_8, magnum_9)
+
+rm(magnum_1, magnum_2, magnum_3, magnum_4, magnum_5, magnum_6, magnum_7, magnum_8, 
+   magnum_9)
+```
+
+
+9. Remove everything that starts with Facebook, Instagram or Forum
+```{r}
+magnum <- magnum %>%
+            select(-Facebook.Author.ID, -Facebook.Comments, -Facebook.Likes, -Facebook.Role,
+                   -Facebook.Shares, -Facebook.Subtype, -Forum.Posts, -Forum.Views,
+                   -Instagram.Comments, -Instagram.Posts, -Instagram.Followers,
+                   -Instagram.Following, -Instagram.Likes,
+                   -Facebook.Shares)
+```
+
+10. Add brand identifier
+```{r}
+magnum$brand <- "Magnum_B&J"
+```
+
+
+
+## Microbiome
+
+11. Save all Microbiome twitter files as csv in the folder Magnum
+
+12. Download each file merge them into one database
+```{r setup}
+knitr::opts_knit$set(root.dir = "C:/Users/Oleksa/Documents/Term_1/DS_Fundamentals/Project/Data/Microbiome")
+```
+
+```{r}
+df_files <- data.frame(name=list.files())
+
+df_files <- df_files %>%
+                mutate(name = as.character(name))
+
+for (i in seq(1, nrow(df_files))) {
+  assign(paste("microbiome", i, sep="_"), read.csv2(df_files$name[i]))
+  
+}
+
+microbiome <- rbind(microbiome_1, microbiome_2, microbiome_3, microbiome_4)
+
+rm(microbiome_1, microbiome_2, microbiome_3, microbiome_4)
+```
+
+
+13. Remove everything that starts with Facebook, Instagram or Forum
+```{r}
+microbiome <- microbiome %>%
+                  select(-Facebook.Author.ID, -Facebook.Comments, -Facebook.Likes, -Facebook.Role,
+                         -Facebook.Shares, -Facebook.Subtype, -Forum.Posts, -Forum.Views,
+                         -Instagram.Comments, -Instagram.Posts, -Instagram.Followers,
+                         -Instagram.Following, -Instagram.Likes, -Instagram.Interactions.Count,
+                         -Facebook.Shares)
+```
+
+14. Add brand identifier
+```{r}
+microbiome$brand <- "Microbiome"
+```
+
+
+
+## Sony
+
+15. Save all Sony twitter files as csv in the folder Magnum
+
+16. Download each file merge them into one database
+```{r setup}
+knitr::opts_knit$set(root.dir = "C:/Users/Oleksa/Documents/Term_1/DS_Fundamentals/Project/Data/Sony")
+```
+
+```{r}
+df_files <- data.frame(name=list.files())
+
+df_files <- df_files %>%
+                mutate(name = as.character(name))
+
+for (i in seq(1, nrow(df_files))) {
+  assign(paste("sony", i, sep="_"), read.csv2(df_files$name[i]))
+  
+}
+
+sony <- rbind(sony_1, sony_2)
+
+rm(sony_1, sony_2)
+```
+
+
+17. Remove everything that starts with Facebook, Instagram or Forum
+```{r}
+sony <- sony %>%
+          select(-Facebook.Author.ID, -Facebook.Comments, -Facebook.Likes, -Facebook.Role,
+                 -Facebook.Shares, -Facebook.Subtype, -Forum.Posts, -Forum.Views,
+                 -Instagram.Comments, -Instagram.Posts, -Instagram.Followers,
+                 -Instagram.Following, -Instagram.Likes, -Instagram.Interactions.Count,
+                 -Facebook.Shares)
+```
+
+18. Add brand identifier
+```{r}
+sony$brand <- "Sony"
+```
+
+
+
+## Webcargo
+
+19. Save all Sony twitter files as csv in the folder Magnum
+
+20. Download each file merge them into one database
+```{r setup}
+knitr::opts_knit$set(root.dir = "C:/Users/Oleksa/Documents/Term_1/DS_Fundamentals/Project/Data/Webcargo")
+```
+
+```{r}
+df_files <- data.frame(name=list.files())
+
+df_files <- df_files %>%
+                mutate(name = as.character(name))
+
+for (i in seq(1, nrow(df_files))) {
+  assign(paste("webcargo", i, sep="_"), read.csv2(df_files$name[i]))
+  
+}
+
+webcargo <- rbind(webcargo_1, webcargo_2, webcargo_3)
+
+rm(webcargo_1, webcargo_2, webcargo_3)
+```
+
+
+21. Remove everything that starts with Facebook, Instagram or Forum
+```{r}
+webcargo <- webcargo %>%
+          select(-Facebook.Author.ID, -Facebook.Comments, -Facebook.Likes, -Facebook.Role,
+                 -Facebook.Shares, -Facebook.Subtype, -Forum.Posts, -Forum.Views,
+                 -Instagram.Comments, -Instagram.Posts, -Instagram.Followers,
+                 -Instagram.Following, -Instagram.Likes, -Instagram.Interactions.Count,
+                 -Facebook.Shares)
+```
+
+22. Add brand identifier
+```{r}
+webcargo$brand <- "Webcargo"
+
+rm(i, df_files)
+```
+
+
+
+## Merge dataframes
+
+23. Create a vector of unique columns names
+```{r}
+all_columns <- c(colnames(magnum), colnames(microbiome), colnames(sony),  
+                 colnames(webcargo))
+
+all_columns <- unique(all_columns)
+```
+
+
+24. Which columns are not in Magnum?
+```{r}
+all_columns[!(all_columns %in% colnames(magnum))]
+```
+
+
+28. All four variables are totally NA. Delete them!
+```{r}
+microbiome <- microbiome %>%
+                  select(-Drivers...Depression, -Drivers...Exercise, -Drivers...Sleep,
+                         -Drivers...Stress, -Microbiome...Microbiome, -Microbiome...Gut.Health)
+
+webcargo <- webcargo %>%
+                  select(-Gender.Keyterms...Female.specific.terms, 
+                         -Gender.Keyterms...Male.specific.keyterms,
+                         -Perspectives...Female.s.Perspective..e.g..my.bf.,
+                         -Perspectives...Male.s.perspectives..e.g..my.gf.)
+
+all_columns <- c(colnames(magnum), colnames(microbiome), colnames(sony),  
+                 colnames(webcargo))
+
+all_columns <- unique(all_columns)
+```
+
+
+31. Add missing columns to Magnum
+```{r}
+magnum <- magnum %>%
+              mutate(Notes = NA, Added= NA, Full.Text = NA, Original.Url = NA, Tags = NA,
+                     Updated = NA)
+
+all_columns[!(all_columns %in% colnames(magnum))]
+```
+
+
+33. Add missing columns to Sony
+```{r}
+all_columns[!(all_columns %in% colnames(sony))]
+
+sony <- sony %>%
+          mutate(Snippet = NA, Notes = NA, Tags = NA)
+
+all_columns[!(all_columns %in% colnames(sony))]
+
+rm(all_columns)
+```
+
+
+
+35. Graph with the number of tweets per database
+```{r}
+df_graph <- data_frame(company = c("Magnum", "Microbiome", "Sony", "Webcargo"),
+                       tweets_total  = c(nrow(magnum), nrow(microbiome), nrow(sony), 
+                                   nrow(webcargo)))
+
+df_graph$tweets_total <- df_graph$tweets_total / 1000
+
+# ggplot(df_graph, aes(company, tweets_total)) + geom_bar(stat="identity", fill="#4292c6") + 
+#   
+#        scale_y_continuous(breaks = seq(0, 300, by = 50)) +  
+#        labs(# title = "Distribution of tweets in four databases",
+#             x = "Database name", y = "Number of tweets, thousands") + 
+#        theme_bw() + 
+#        theme(axis.title=element_text(size=14),
+#              axis.text =element_text(size=12),
+#              title = element_text(size=14))
+# 
+# ggsave("tweets_distr.jpeg")
+```
+
+
+36. Merge databases
+```{r}
+df_tweets <- rbind(magnum, microbiome, sony, webcargo)
+
+# delete intemediate datsets to save space
+rm(magnum, microbiome, sony, webcargo)
+```
+
+
+
+# Notes column has only three uninformative unique values
+# 518 thou out of 656 thou are NA's
+# another 138 thou are empty strings ""
+```{r}
+df_tweets <- df_tweets %>%
+                select(-Notes, -Updated, -Tags, -Word.Count, -Original.Url, -Tracked.Links,
+                       -Tracked.Link.Clicks, -Status, -Domain, -Avatar, -Continent.Code,
+                       -Country.Code, -Author.Continent.Code, -Author.Country.Code,
+                       -Author.City.Code, -Author.County.Code, -Author.State.Code,
+                       -City.Code, -County.Code, -State.Code, -Assignment, -Blog.Comments,
+                       -Checked, -Assignment, -Last.Assignment.Date, -Location.Name,
+                       -Media.Filter, -Priority, -Starred, -Thread.Created.Date, -Thread.URL,
+                       -Twitter.Channel.Role, -Language, -Page.Type, -Continent, -County,
+                       -City, -State, -Author.City, -Author.Continent, -Author.County,
+                       -Author.State, -Author.Location, -Category.Details, -Short.URLs,
+                       -Twitter.Retweet.of, -Subtype, -Title, -Query.Id, -Author,
+                       -Twitter.Author.ID, -Thread.Author, -Thread.Id, -Twitter.Reply.to,
+                       -Backlinks, -Total.Monthly.Visitors, -Percentage.Female,
+                       -Percentage.Male, -Average.Pages.per.Visitor, -Average.Visits.per.Visitor,
+                       -Minutes.per.Visitor, -Added, -Author.Country, -Resource.Id)
+
+```
+
+
+
+# Removing retweets and duplicates
+
+### Create variable Text:
+IF Full.Text != NA - Full.Text
+ELSE Snippet
+```{r}
+df_tweets <- df_tweets %>%
+                mutate(Snippet = as.character(Snippet),
+                       text = ifelse(is.na(Full.Text), Snippet, Full.Text))
+```
+
+
+### Indicator for retweet
+### Add info about retweets to the df_graph dataset
+### Removing retweets
+```{r}
+expr_retweet   <- "\\bRT @"
+df_tweets <- df_tweets %>%
+                mutate(retweet = str_detect(text, expr_retweet))
+
+df_retweets <- df_tweets[df_tweets$retweet==TRUE,]
+
+retweets_obs <- c(sum(df_retweets$brand=="Magnum_B&J"),
+                  sum(df_retweets$brand=="Microbiome"),
+                  sum(df_retweets$brand=="Sony"),
+                  sum(df_retweets$brand=="Webcargo"))
+
+
+df_graph$retweets <- retweets_obs / 1000
+
+df_tweets <- df_tweets %>%
+                  filter(retweet == FALSE)
+
+rm(expr_retweet, df_retweets, retweets_obs)
+df_tweets$retweet <- NULL
+```
+
+
+
+### Indicator for text duplicates
+### Add info about duplicates to the df_graph dataset
+### Remove duplicate
+It seems that duplicate is really the same tweet that for some reason is accounted as several observstions
+```{r}
+df_tweets <- df_tweets %>%
+                    mutate(duplicate = duplicated(text))
+
+df_duplicates <- df_tweets[df_tweets$duplicate==TRUE,]
+
+duplicates_obs <- c(sum(df_duplicates$brand=="Magnum_B&J"),
+                    sum(df_duplicates$brand=="Microbiome"),
+                    sum(df_duplicates$brand=="Sony"),
+                    sum(df_duplicates$brand=="Webcargo"))
+
+
+df_graph$duplicates <- duplicates_obs / 1000
+
+df_tweets <- df_tweets %>%
+                filter(duplicate == FALSE)
+
+rm(duplicates_obs, df_duplicates)
+```
+
+
+# Add tweets labels
+
+### Add account address to the database
+```{r}
+account_address <- ".+?(?=statuses)"
+
+df_tweets <- df_tweets %>%
+                  mutate(account = str_extract(Url, account_address))
+
+rm(account_address)
+```
+
+
+### Open database with number of tweets in the database and account status
+```{r setup}
+knitr::opts_knit$set(root.dir = "C:/Users/Oleksa/Documents/Term_1/DS_Fundamentals/Project/Data/Suspended/results")
+```
+
+
+### Merge two databases
+```{r}
+df_labels <-  read.csv2("spam_labels.csv", stringsAsFactors = FALSE)
+
+colnames(df_labels) <- c("account", "tweets_in_database", "account_status")
+
+df_tweets <- merge(df_tweets, df_labels, by="account", all.x = TRUE)
+
+summary(df_tweets$account_status)
+```
+
+
+# Pre-processing text data
+
+Convert text column to lovercase, make a copy of it
+```{r}
+df_tweets <- df_tweets %>%
+                  mutate(text = str_to_lower(text)) %>%
+                  mutate(text_proc = text)  
+```
+
+
+Delete mentioned authors
+```{r}
+authors <- "@\\w+"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, authors, ''))
+rm(authors)
+```
+
+Delete hashtags
+```{r}
+hashtags <- "#\\w+"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, hashtags, ''))
+rm(hashtags)
+```
+
+Delete links
+```{r}
+# Source: https://knowledge.safe.com/questions/29604/regex-to-extract-url-from-tweet.html
+links_expr <- "(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w\\.-]*)*\\/?\\S"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, links_expr, ''))
+rm(links_expr)
+```
+
+Delete punctuation
+```{r}
+punctuation <- "[?!,.•…@%*<>()\\[\\]{}\"#$^;:-=+\\/|`~“”]"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, punctuation, ' '))
+rm(punctuation)
+```
+
+Remove digits
+```{r}
+digits <- "\\d"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, digits, ' '))
+rm(digits)
+```
+
+
+
+Delete ben & jerry's
+Delete sony
+Delete magnums
+Delete microbiome
+Delete ice cream
+```{r}
+expression <- "(\\bben\\W*\\w+\\W*\\w*s\\b)|(ben and jerry's)|(sony)|(\\bmagnum\\w*\\b)|(microbiome)|(ice cream)"
+
+df_tweets <- df_tweets %>%
+                  mutate(text_proc = str_replace_all(text_proc, expression, ' '))
+
+rm(expression)
+```
+
+
+#################
+Second round duplicates
+
+```{r}
+# Variable - row number
+df_tweets <- df_tweets %>%
+                  mutate(order = as.numeric(rownames(df_tweets)))
+```
+
+
+### Indicator for text duplicates
+Identify duplicates by column processed text
+```{r}
+df_tweets <- df_tweets %>%
+                    mutate(duplicate = duplicated(text_proc)) %>%
+                    arrange(desc(order)) %>%
+                    mutate(duplicate_2 = duplicated(text_proc)) %>%
+                    mutate(duplicate = ifelse(duplicate_2==TRUE, duplicate_2, duplicate)) %>%
+                    select(-duplicate_2, -order)
+                    
+# View(df_tweets[df_tweets$duplicate==TRUE,])
+```
+
+
+### Add info about duplicates to the df_graph dataset
+```{r}
+df_duplicates <- df_tweets[df_tweets$duplicate==TRUE,]
+
+duplicates_obs <- c(sum(df_duplicates$brand=="Magnum_B&J"),
+                    sum(df_duplicates$brand=="Microbiome"),
+                    sum(df_duplicates$brand=="Sony"),
+                    sum(df_duplicates$brand=="Webcargo"))
+
+
+df_graph$duplicates_2 <- duplicates_obs / 1000
+rm(df_duplicates, duplicates_obs)
+```
+
+
+### What share of 2nd round duplicates are suspended
+Suspended - 5471 - 21.12% !!!!
+Normal - 25898
+Total  - 33188
+```{r}
+nrow(df_duplicates[df_duplicates$account_status=="suspended", ])
+nrow(df_duplicates[df_duplicates$account_status=="normal", ])
+```
+
+### Another duplicate identifier to keep first instance of duplicated tweets
+```{r}
+df_tweets <- df_tweets %>%
+                    mutate(duplicate_2 = duplicated(text_proc))
+```
+
+
+### Delete next instances of duplicated messages. Keep the first instance
+Before     - 291,225
+After      - 264,783
+```{r}
+df_tweets <- df_tweets %>%
+                filter(duplicate_2 == FALSE) %>%
+                select(-duplicate_2) %>%
+                mutate(spam_dupl = ifelse(duplicate==TRUE, "spam_dupl", "normal")) %>%
+                select(-duplicate)
+```
+
+
+```{r}
+df_normal <- df_tweets %>%
+                filter(!duplicated(account)) %>%
+                select(account, tweets_in_database)
+
+prolific <- as.numeric(quantile(df_normal$tweets_in_database, 0.98, na.rm=TRUE))
+
+df_tweets <- df_tweets %>%
+                mutate(prolific = ifelse(tweets_in_database>prolific, "prolific", "normal"))
+
+rm(df_normal, prolific)
+```
+
+
+
+### Add info about prolific accounts to the df_graph dataset
+```{r}
+df_prolific <- df_tweets[df_tweets$spam_dupl=="normal" & df_tweets$prolific=="prolific",]
+
+prolific_obs <-  c(sum(df_prolific$brand=="Magnum_B&J", na.rm = TRUE),
+                   sum(df_prolific$brand=="Microbiome", na.rm = TRUE),
+                   sum(df_prolific$brand=="Sony", na.rm = TRUE),
+                   sum(df_prolific$brand=="Webcargo", na.rm = TRUE))
+
+df_graph$prolific <- prolific_obs / 1000
+
+rm(df_prolific, prolific_obs)
+```
+
+
+
+
+# Removing words
+```{r}
+words <- c("an", "a",
+           "about",
+           "and", "&",
+           "any",
+           "all",
+           "also",
+           "am",
+           "aren't", "aren’t", "arent", "are",
+           "as",
+           "at",
+           "be", "being",
+           "by",
+           "but",
+           "can't", "can’t", "cant", "can", "couldn't", "couldn't", "couldn’t", "could",
+           "doesn't", "doesn’t", "doesnt", "does",
+           "don't", "don’t", "dont", "do", "done",
+           "didn't", "didn’t", "didnt", "did",
+           "even",
+           "else",
+           "from",
+           "for",
+           "haven't", "haven’t", "havent", "have",
+           "hasn't", "has’t", "hasnt", "has",
+           "hadn't", "hadn’t", "hadnt", "had",
+           "here's", "here’s", "heres", "here",
+           "he", "his", "hers", "her",
+           "i'm", "i’m", "im", "i'd", "i’d", "id", "i've", "i’ve", "ive",
+           "i'll", "i’ll", "ill", "i",
+           "if",
+           "in",
+           "isn't", "isn’t", "isnt", "is",
+           "it's", "it’s", "its", "it",
+           "me", "my", "mine",
+           "not", "no",
+           "off", "of",
+           "on",
+           "or",
+           "ours", "our",
+           "out",
+           "she's", "she’s", "shes", "she",
+           "shouldn't", "shouldn’t", "shouldnt", "should",
+           "some", "so",
+           "such", 
+           "than", "then",
+           "that's", "that’s", "thats", "that",
+           "they're", "they’re", "theyre", "their", "theirs", "they", "there's", "there’s", "theres",
+           "these", "those", "this",
+           "the",
+           "to",
+           "us",
+           "wasn't", "wasn’t", "wasnt", "was",
+           "weren't", "weren’t", "werent", "were", "we",
+           "will",
+           "what's", "what’s", "whats", "what", 
+           "why", "when", "where",
+           "which",
+           "whose", "who's", "who’s", "whos",
+           "wouldn't", "wouldn’t", "wouldnt", "would",
+           "yes",
+           "y'all", "y’all", "yall",
+           "you're", "you’re", "youre", "yours", "your", "you")
+
+           
+words_expr <- ""
+
+for (i in 1:length(words)){
+  words_expr <- paste(words_expr, "\\b", words[i], "\\b|", sep="")
+}
+words_expr <- str_sub(words_expr, end = -2)
+
+df_tweets <- df_tweets %>%
+                  mutate(text_proc_2 = str_replace_all(text_proc, words_expr, ' '))
+
+rm(i, words_expr, words)
+```
+
+### Additional cleaning
+```{r}
+expression <- "[-&_—]"
+df_tweets <- df_tweets %>%
+                  mutate(text_proc_2 = str_replace_all(text_proc_2, expression, ' '))
+
+expression <- '"'
+df_tweets <- df_tweets %>%
+                  mutate(text_proc_2 = str_replace_all(text_proc_2, expression, ' '))
+```
+
+
+### Lemmatize text
+```{r}
+df_tweets <- df_tweets %>%
+                  mutate(text_proc_2 = lemmatize_strings(text_proc_2))
+```
+
+### Add tweet ID
+```{r}
+df_tweets <- df_tweets %>%
+                  mutate(id = rownames(df_tweets))
+```
+
+
+### Mark accounts that are in the top 2% by the number of followers and impressions (visits)
+```{r}
+df_normal <- df_tweets %>%
+                filter(!duplicated(account)) %>%
+                select(account, Twitter.Followers, Impressions)
+
+# 98% of accounts have 23 thou followers
+pop_followers <- as.numeric(quantile(df_normal$Twitter.Followers, 0.98, na.rm=TRUE))
+pop_followers
+
+# 98% of accounts have 40 thou visits per tweet
+pop_visits <- as.numeric(quantile(df_normal$Impressions, 0.98, na.rm=TRUE))
+pop_visits
+
+df_tweets <- df_tweets %>%
+                mutate(popular_followers = ifelse(Twitter.Followers>pop_followers, "popular", "normal"),
+                       popular_visits = ifelse(Impressions>pop_visits, "popular", "normal"))
+
+
+# number of popular_followers tweets 8803
+nrow(subset(df_tweets, spam_dupl=="normal" & prolific=="normal" & (popular_followers=="popular" | popular_visits=="popular")))
+
+rm(df_normal, pop_followers, pop_visits)
+```
+
+
+
+### Add info about popular accounts to the df_graph dataset
+```{r}
+df_popular <- df_tweets[df_tweets$spam_dupl=="normal" & df_tweets$prolific=="normal" &
+                        (df_tweets$popular_followers=="popular" | 
+                         df_tweets$popular_visits=="popular"), ]
+
+popular_obs <-  c(sum(df_popular$brand=="Magnum_B&J", na.rm = TRUE),
+                  sum(df_popular$brand=="Microbiome", na.rm = TRUE),
+                  sum(df_popular$brand=="Sony", na.rm = TRUE),
+                  sum(df_popular$brand=="Webcargo", na.rm = TRUE))
+
+df_graph$popular <- popular_obs / 1000
+
+rm(df_popular, popular_obs)
+```
+
+
+### Add info about suspended accounts to the df_graph dataset
+```{r}
+df_normal <- df_tweets[df_tweets$spam_dupl=="normal" & df_tweets$prolific!="prolific" &
+                       df_tweets$popular_followers=="normal" &
+                       df_tweets$popular_visits=="normal", ]
+
+
+df_suspended <- df_normal[df_normal$account_status=="suspended",]
+
+suspended_obs <-  c(sum(df_suspended$brand=="Magnum_B&J", na.rm = TRUE),
+                    sum(df_suspended$brand=="Microbiome", na.rm = TRUE),
+                    sum(df_suspended$brand=="Sony", na.rm = TRUE),
+                    sum(df_suspended$brand=="Webcargo", na.rm = TRUE))
+
+df_graph$suspended <- suspended_obs / 1000
+
+
+df_nonexistent <- df_normal[df_normal$account_status=="nonexistent",]
+
+nonexistent_obs <-  c(sum(df_nonexistent$brand=="Magnum_B&J", na.rm = TRUE),
+                    sum(df_nonexistent$brand=="Microbiome", na.rm = TRUE),
+                    sum(df_nonexistent$brand=="Sony", na.rm = TRUE),
+                    sum(df_nonexistent$brand=="Webcargo", na.rm = TRUE))
+
+df_graph$nonexistent <- nonexistent_obs / 1000
+
+rm(df_normal, df_suspended, suspended_obs, df_nonexistent, nonexistent_obs)
+```
+
+
+
+### Final dataset for training the model
+```{r}
+df_data <- df_tweets %>%
+               mutate(spam = ifelse(account_status=="suspended" | spam_dupl=="spam_dupl",
+                                    1, 0)) %>%
+               filter(spam==1 | account_status    =="normal")  #%>%    # filter out nonexistent
+               # filter(spam==1 | prolific          =="normal")  %>%    # filter out prolific
+               # filter(spam==1 | popular_followers =="normal")  %>%    # filter out popular
+               # filter(spam==1 | popular_visits    =="normal")         # filter out popular
+
+# 202 592 ---- 238 141
+```
+
+
+### Leave only necessary variables
+```{r}
+df_data <- df_data %>%
+              select(-account, -Url, -Query.Name, -Snippet, -Date, -Display.URLs,
+                     -Full.Text, -text, -text_proc, -prolific, -spam_dupl, -account_status,
+                     -brand, -popular_followers, -popular_visits)
+
+# we cannot use this variable, cause we allowed only spam authors to have more than 5 tweets
+```
+
+
+### New variables
+```{r}
+# is Interest indicated?
+df_data$interest <- ifelse(df_data$Interest!="" & !is.na(df_data$Interest), 1, 0)
+df_data$Interest <- NULL
+
+# Latitude and Longitude is not zero
+df_data$position  <- ifelse(df_data$Latitude!=0 & df_data$Longitude!=0, 1, 0)
+df_data$Latitude  <- NULL
+df_data$Longitude <- NULL
+
+# whether tweet has picture/photo
+# all Media.URLs point to jpg or png pictures
+# View(df_data[df_data$Media.URLs!="",])
+df_data$picture  <- str_sub(df_data$Media.URLs, start=-3L)
+df_data$picture  <- ifelse(df_data$Media.URLs!="" & !is.na(df_data$Media.URLs), 1, 0)
+df_data$Media.URLs <- NULL
+
+# profession indicated
+df_data$profession  <- ifelse(df_data$Professions!="" & !is.na(df_data$Professions), 1, 0)
+df_data$Professions <- NULL
+
+# number of accounts mentioned
+df_data$mentioned <- str_count(df_data$Mentioned.Authors, "@")
+df_data$Mentioned.Authors <- NULL
+
+# number hashtags
+df_data$hashtags <- str_count(df_data$Hashtags, "#")
+df_data$Hashtags <- NULL
+
+# name consists of two words
+expression <- "^\\w+\\s\\w+$"
+df_data$name_2_w <- str_detect(df_data$Full.Name, expression)
+df_data$Full.Name <- NULL
+```
+
+
+
+### Database of links
+```{r}
+links <- str_c(df_data$Expanded.URLs, collapse = ", ")
+links <- str_split(links, ", ")[[1]]
+links <- links[links != ""]
+links <- data.frame(URL = links)
+
+expression <- "\\/\\/w*\\.*\\w+"
+links$website <- str_extract(links$URL, expression)
+links$website <- str_replace_all(links$website, "[\\/\\.]|(www)", '')
+
+
+links <- links %>%
+            group_by(website) %>%
+            summarise(count = n())
+
+
+df_data$links_number    <- str_count(df_data$Expanded.URLs, "htt")
+df_data$links_twitter   <- str_detect(df_data$Expanded.URLs, "twitter")
+df_data$links_youtube   <- str_detect(df_data$Expanded.URLs, "(youtube)|(youtu\\.be)")
+df_data$links_facebook  <- str_detect(df_data$Expanded.URLs, "(\\/\\/w*\\.*facebook)|(\\/\\/w*\\.*fb)")
+df_data$links_instagram <- str_detect(df_data$Expanded.URLs, "instagram")
+df_data$links_other     <- ifelse(df_data$links_number -
+                                  as.numeric(df_data$links_twitter) -
+                                  as.numeric(df_data$links_youtube) -
+                                  as.numeric(df_data$links_facebook) -
+                                  as.numeric(df_data$links_instagram) > 0, TRUE, FALSE)
+
+df_data$Expanded.URLs <- NULL
+
+rm(expression)
+```
+
+
+### Check factors levels
+```{r}
+unique(df_data$Sentiment)
+
+summary(df_data$Account.Type)
+levels(df_data$Account.Type) <- c("unknown", "individual", "organisational")
+summary(df_data$Account.Type)
+
+summary(df_data$Gender)
+df_data$Gender <- as.character(df_data$Gender)
+df_data$Gender <- ifelse(df_data$Gender=="", "unknown", df_data$Gender)
+df_data$Gender <- as.factor(df_data$Gender)
+summary(df_data$Gender)
+
+summary(df_data$Twitter.Verified)
+df_data$Twitter.Verified <- as.character(df_data$Twitter.Verified)
+df_data$Twitter.Verified <- as.factor(df_data$Twitter.Verified)
+summary(df_data$Twitter.Verified)
+
+summary(df_data$Thread.Entry.Type)
+df_data$Thread.Entry.Type <- as.character(df_data$Thread.Entry.Type)
+df_data$Thread.Entry.Type <- as.factor(df_data$Thread.Entry.Type)
+summary(df_data$Thread.Entry.Type)
+```
+
+
+
+### Change format of variables
+```{r}
+df_data$Twitter.Retweets <- as.numeric(df_data$Twitter.Retweets)
+
+
+df_data$name_2_w        <- as.factor(df_data$name_2_w)
+df_data$links_twitter   <- as.factor(df_data$links_twitter)
+df_data$links_youtube   <- as.factor(df_data$links_youtube)
+df_data$links_facebook  <- as.factor(df_data$links_facebook)
+df_data$links_instagram <- as.factor(df_data$links_instagram)
+df_data$links_other     <- as.factor(df_data$links_other)
+
+
+df_data$interest        <- as.factor(df_data$interest)
+df_data$profession      <- as.factor(df_data$profession)
+df_data$position        <- as.factor(df_data$position)
+df_data$picture         <- as.factor(df_data$picture)
+```
+
+
+### Dataset for regression
+```{r}
+df_spam <- df_data %>%
+                filter(spam == 1)
+
+# accounts with 2018 tweets may be to young to be suspended
+df_normal <- df_data %>%
+                filter(spam != 1)
+
+## set the seed to make partition reproducible
+set.seed(123)
+
+##########
+# Training set
+
+## 80% of the sample size - training set
+smp_size  <- floor(0.8 * nrow(df_spam))
+
+train_obs_spam   <- sample(seq_len(nrow(df_spam)),   size = smp_size)
+train_obs_normal <- sample(seq_len(nrow(df_normal)), size = smp_size)
+
+df_train_spam    <- df_spam[train_obs_spam,    ]
+df_train_normal  <- df_normal[train_obs_normal,]
+
+df_train <- rbind(df_train_spam, df_train_normal)
+rm(df_train_spam, df_train_normal)
+
+
+##########
+# Test set
+
+df_spam   <- df_spam  [!(seq_len(nrow(df_spam))   %in% train_obs_spam),   ]
+df_normal <- df_normal[!(seq_len(nrow(df_normal)) %in% train_obs_normal), ]
+
+## 80% of the remaining sample - test set
+smp_size  <- floor(0.8 * nrow(df_spam))
+
+test_obs_spam   <- sample(seq_len(nrow(df_spam)),   size = smp_size)
+test_obs_normal <- sample(seq_len(nrow(df_normal)), size = smp_size)
+
+df_test_spam    <- df_spam[test_obs_spam,     ]
+df_test_normal  <- df_normal[test_obs_normal, ]
+
+df_test <- rbind(df_test_spam, df_test_normal)
+rm(df_test_spam, df_test_normal, train_obs_spam, train_obs_normal)
+
+##########
+# Validation set
+
+df_valid_spam   <- df_spam  [!(seq_len(nrow(df_spam)) %in% test_obs_spam),   ]
+
+smp_size  <- nrow(df_valid_spam)
+
+df_normal <- df_normal[!(seq_len(nrow(df_normal)) %in% test_obs_normal), ]
+
+valid_obs_normal <- sample(seq_len(nrow(df_normal)), size = smp_size)
+
+df_valid_normal  <- df_normal[valid_obs_normal,]
+
+df_valid <- rbind(df_valid_spam, df_valid_normal)
+rm(df_valid_spam, df_valid_normal, valid_obs_normal, smp_size, df_normal, df_spam,
+   test_obs_spam, test_obs_normal)
+
+```
+
+
+
+
+### Calculate word frequence in the train set
+```{r}
+corpus <- str_c(df_train$text_proc_2, collapse = " ")
+corpus <- str_split(corpus, " ")[[1]]
+corpus <- corpus[corpus != ""]
+corpus <- data.frame(word = corpus)
+corpus <- corpus %>%
+                group_by(word) %>%
+                summarise(count = n())
+
+df_data_spam <- df_train[df_train$spam==1, ]
+corpus_spam <- str_c(df_data_spam$text_proc_2, collapse = " ")
+corpus_spam <- str_split(corpus_spam, " ")[[1]]
+corpus_spam <- corpus_spam[corpus_spam != ""]
+corpus_spam <- data.frame(word = corpus_spam)
+corpus_spam <- corpus_spam %>%
+                group_by(word) %>%
+                summarise(count = n())
+
+corpus <- merge(corpus, corpus_spam, by="word", all.x = TRUE)
+colnames(corpus) <- c("word", "total", "spam")
+rm(corpus_spam)
+
+corpus$spam <- ifelse(is.na(corpus$spam), 0, corpus$spam)
+corpus$normal <- corpus$total - corpus$spam
+
+corpus <- subset(corpus, total>=10)
+
+
+n_spam  <- nrow(df_data[df_data$spam==1,])
+n_normal <- nrow(df_data[df_data$spam!=1,])
+
+corpus$spam_perc   <- round(corpus$spam   / n_spam  * 100, 2)
+corpus$normal_perc <- round(corpus$normal / n_normal * 100, 2)
+corpus$difference  <- abs(corpus$spam_perc - corpus$normal_perc)
+
+
+rm(df_data_spam, n_spam, n_normal)
+```
+
+
+### Word variables
+```{r}
+df_train$word_sex   <- str_detect(df_train$text_proc_2, "sex")
+df_train$word_good  <- str_detect(df_train$text_proc_2, "good")
+df_train$word_woman <- str_detect(df_train$text_proc_2, "woman")
+df_train$word_new   <- str_detect(df_train$text_proc_2, "new")
+df_train$word_like  <- str_detect(df_train$text_proc_2, "know")
+
+df_train$text_proc_2 <- NULL
+
+
+df_test$word_sex   <- str_detect(df_test$text_proc_2, "sex")
+df_test$word_good  <- str_detect(df_test$text_proc_2, "good")
+df_test$word_woman <- str_detect(df_test$text_proc_2, "woman")
+df_test$word_new   <- str_detect(df_test$text_proc_2, "new")
+df_test$word_like  <- str_detect(df_test$text_proc_2, "know")
+
+df_test$text_proc_2 <- NULL
+
+
+df_valid$word_sex   <- str_detect(df_valid$text_proc_2, "sex")
+df_valid$word_good  <- str_detect(df_valid$text_proc_2, "good")
+df_valid$word_woman <- str_detect(df_valid$text_proc_2, "woman")
+df_valid$word_new   <- str_detect(df_valid$text_proc_2, "new")
+df_valid$word_like  <- str_detect(df_valid$text_proc_2, "know")
+
+df_valid$text_proc_2 <- NULL
+
+
+```
+
+
+### Format word variables
+```{r}
+df_train$word_sex        <- as.factor(df_train$word_sex)
+df_train$word_good       <- as.factor(df_train$word_good)
+df_train$word_woman      <- as.factor(df_train$word_woman)
+df_train$word_new        <- as.factor(df_train$word_new)
+df_train$word_like       <- as.factor(df_train$word_like)
+
+df_test$word_sex        <- as.factor(df_test$word_sex)
+df_test$word_good       <- as.factor(df_test$word_good)
+df_test$word_woman      <- as.factor(df_test$word_woman)
+df_test$word_new        <- as.factor(df_test$word_new)
+df_test$word_like       <- as.factor(df_test$word_like)
+
+df_valid$word_sex        <- as.factor(df_valid$word_sex)
+df_valid$word_good       <- as.factor(df_valid$word_good)
+df_valid$word_woman      <- as.factor(df_valid$word_woman)
+df_valid$word_new        <- as.factor(df_valid$word_new)
+df_valid$word_like       <- as.factor(df_valid$word_like)
+```
+
+
+
+<!-- ### Description of three datasets -->
+<!-- ```{r} -->
+<!-- df_train$counter <- 1 -->
+<!-- df_descr_train <- data.frame(tapply(df_train$counter,  -->
+<!--                                     list(df_train$brand, df_train$spam),  -->
+<!--                                     sum, na.rm=TRUE)) -->
+<!-- df_train$counter <- NULL -->
+
+
+
+<!-- df_test$counter <- 1 -->
+<!-- df_descr_test <- data.frame(tapply(df_test$counter,  -->
+<!--                                     list(df_test$brand, df_test$spam),  -->
+<!--                                     sum, na.rm=TRUE)) -->
+<!-- df_test$counter <- NULL -->
+
+
+<!-- df_valid$counter <- 1 -->
+<!-- df_descr_valid <- data.frame(tapply(df_valid$counter,  -->
+<!--                                     list(df_valid$brand, df_valid$spam),  -->
+<!--                                     sum, na.rm=TRUE)) -->
+<!-- df_valid$counter <- NULL -->
+<!-- ``` -->
+
+
+Save everything
+```{r}
+write.csv(df_tweets,  "df_tweets_30_11.csv", row.names = FALSE)
+write.csv(df_data,    "df_data_30_11.csv",   row.names = FALSE)
+write.csv(df_train,   "df_train_30_11.csv",  row.names = FALSE)
+write.csv(df_test,    "df_test_30_11.csv",   row.names = FALSE)
+write.csv(df_valid,   "df_valid_30_11.csv",  row.names = FALSE)
+```
+
+
