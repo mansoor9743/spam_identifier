@@ -27,7 +27,7 @@ Twitter
 bloggers, etc.)
 
 ### Preprocessing as an answer to research question
-Data cosists of 0.74 GB of information with 656,000 observations. Each observation includes a tweet and information about the
+Data consists of 0.74 GB of information with 656,000 observations. Each observation includes a tweet and information about the
 Twitter account, for instance, number of followers. All tweets are related to one of the four subjects:
 1. Ben & Jerry’s ice cream (Magnum dataset) 
 2. Sony playstation (Sony dataset)
